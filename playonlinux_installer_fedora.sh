@@ -4,33 +4,71 @@ POLREPDIR='/etc/yum.repos.d'
 POLREPFILE="$POLREPDIR/playonlinux.repo"
 POLREPURL='http://rpm.playonlinux.com/playonlinux.repo'
 
-echo '--> Welcome to PlayOnLinux Fedora Installer <--'
-sleep 3
+function install_root {
+	echo '--> Installing PlayOnLinux <--'
+	sleep 2
+	yum update
+	yum install playonlinux
+}
 
-if [ -d $POLREPDIR ];then
+function install_common {
+	echo '--> Installing PlayOnLinux <--'
+	sleep 2
+	su -c 'yum update'
+	su -c 'yum install playonlinux'
+}
+
+function fedora_installer {
 	if [ $USER = root ]; then
-		echo '--> Grabbing the repo file on PlayOnLinux Server'
-		sleep 3
-		wget "$POLREPURL" -O "$POLREPFILE"
 		if [ -f $POLREPFILE ]; then
-			echo '--> Installing PlayOnLinux'
-			sleep 3
-			yum update
-			yum install playonlinux
+			install_root
 		else
-			echo '--> The installer can not find the file '$POLREPFILE', please run the installer again'
+			echo '--> The installer cannot find the file '$POLREPFILE''
+			echo '--> Grabbing the repo file on PlayOnLinux Server'
+			sleep 2
+			wget "$POLREPURL" -O "$POLREPFILE"
+			install_root
 		fi
 	else
-		echo '--> Grabbing the repo file on PlayOnLinux Server'
-		sleep 3
-		sudo wget "$POLREPURL" -O "$POLREPFILE"
 		if [ -f $POLREPFILE ]; then
-			echo '--> Installing PlayOnLinux'
-			sleep 3
-			sudo yum update
-			sudo yum install playonlinux
+			install_common
 		else
-			echo '--> The installer can not find the file '$POLREPFILE', please run the installer again'
+			echo '--> The installer cannot find the file '$POLREPFILE''
+			echo '--> Grabbing the repo file on PlayOnLinux Server'
+			sleep 2
+			su -c "wget $POLREPURL -O $POLREPFILE"
+			install_common
+		fi
+	fi
+}
+
+echo '--> Welcome to PlayOnLinux Fedora Installer <--'
+sleep 2
+
+if [ -d $POLREPDIR ];then
+	if [ type -P wget ]; then
+		fedora_installer
+	else
+		echo -n '--> I need wget for download the repo file. Would you like install wget for you? (Y/n): '
+		read RESPWGET
+
+		if [ $RESPWGET = 'Y' -o $RESPWGET = 'y' ]; then
+			if [ $USER = root ]; then
+				yum install wget
+			else
+				su -c 'yum install wget'
+			fi
+
+			echo -n '--> Proceed to PlayOnLinux install? (Y/n): '
+			read RESPINS
+
+			if [ $RESPINS = 'Y' -o $RESPINS = 'y' ]; then
+				fedora_installer
+			else
+				echo "Ok, bye..."
+			fi
+		else
+			echo "--> Ok, I wait you download the repo file ($POLREPURL) and put in '$POLREPDIR'"
 		fi
 	fi
 else
