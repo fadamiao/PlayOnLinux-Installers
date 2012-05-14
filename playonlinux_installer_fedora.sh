@@ -26,7 +26,7 @@ function fedora_installer {
 			echo '--> The installer cannot find the file '$POLREPFILE''
 			echo '--> Grabbing the repo file on PlayOnLinux Server'
 			sleep 2
-			wget "$POLREPURL" -O "$POLREPFILE"
+			wget "$POLREPURL -O $POLREPFILE"
 			install_root
 		fi
 	else
@@ -45,8 +45,8 @@ function fedora_installer {
 echo '--> Welcome to PlayOnLinux Fedora Installer <--'
 sleep 2
 
-if [ -d $POLREPDIR ];then
-	if [ type -P wget ]; then
+if [ -d $POLREPDIR ]; then
+	if ( type -P wget &> /dev/null ); then
 		fedora_installer
 	else
 		echo -n '--> I need wget for download the repo file. Would you like install wget for you? (Y/n): '
