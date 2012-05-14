@@ -8,12 +8,10 @@ echo '--> Welcome to PlayOnLinux Fedora Installer <--'
 sleep 3
 
 if [ -d $POLREPDIR ];then
-
-	echo '--> Grabbing the repo file on PlayOnLinux Server'
-	sleep 3
-	wget "$POLREPURL" -O "$POLREPFILE"
-
 	if [ $USER = root ]; then
+		echo '--> Grabbing the repo file on PlayOnLinux Server'
+		sleep 3
+		wget "$POLREPURL" -O "$POLREPFILE"
 		if [ -f $POLREPFILE ]; then
 			echo '--> Installing PlayOnLinux'
 			sleep 3
@@ -23,6 +21,9 @@ if [ -d $POLREPDIR ];then
 			echo '--> The installer can not find the file '$POLREPFILE', please run the installer again'
 		fi
 	else
+		echo '--> Grabbing the repo file on PlayOnLinux Server'
+		sleep 3
+		sudo wget "$POLREPURL" -O "$POLREPFILE"
 		if [ -f $POLREPFILE ]; then
 			echo '--> Installing PlayOnLinux'
 			sleep 3
