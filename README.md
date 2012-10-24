@@ -16,6 +16,9 @@ This installers are basically the instructions from [PlayOnLinux WebSite](http:/
 Now with support to all Distros in the [PlayOnLinux download page](http://www.playonlinux.com/en/download.html).
 
 
+Please help me testing in your system. =D
+
+
 ## How To
 ### Dependencies
 All dependencies are not dependencies, are only tools that already comes standard on the system, but even so I ask that you check with verify.bash so there are no problems at installation.
